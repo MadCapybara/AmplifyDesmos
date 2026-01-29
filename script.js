@@ -56,6 +56,7 @@ async function listZones() {
         zones[0].featured = true; // always gonna be the discord
         await fetchPopularity();
         sortZones();
+        try {
         const search = new URLSearchParams(window.location.search);
         const id = search.get('id');
         const embed = window.location.hash.includes("embed");
@@ -111,7 +112,7 @@ async function listZones() {
                 }
             }
         }
-
+        } catch(error){}
         let alltags = [];
         for (const obj of json) {
             if (Array.isArray(obj.special)) {
@@ -306,9 +307,11 @@ function openZone(file) {
                 document.getElementById('zoneAuthor').href = file.authorLink;
             }
             zoneViewer.style.display = "block";
-            const url = new URL(window.location);
-            url.searchParams.set('id', file.id);
-            history.pushState(null, '', url.toString());
+            try {
+                const url = new URL(window.location);
+                url.searchParams.set('id', file.id);
+                history.pushState(null, '', url.toString());
+            } catch(error){}
             zoneViewer.hidden = true;
         }).catch(error => alert("Failed to load zone: " + error));
     }
@@ -330,9 +333,11 @@ function closeZone() {
     zoneViewer.hidden = false;
     zoneViewer.style.display = "none";
     zoneViewer.removeChild(zoneFrame);
+    try {
     const url = new URL(window.location);
     url.searchParams.delete('id');
     history.pushState(null, '', url.toString());
+    } catch(error){}
 }
 
 function downloadZone() {
@@ -808,8 +813,10 @@ listZones();
 const schoolList = ["deledao", "goguardian", "lightspeed", "linewize", "securly", ".edu/"];
 
 function isBlockedDomain(url) {
+    try {
     const domain = new URL(url, location.origin).hostname + "/";
     return schoolList.some(school => domain.includes(school));
+    } catch(error){return false;}
 }
 
 const originalFetch = window.fetch;

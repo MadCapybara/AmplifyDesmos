@@ -126,11 +126,13 @@
 
     <script src="script.js"></script>
     <script>
+        try {
         const search = new URLSearchParams(window.location.search);
         const privacy = search.get('privacy');
         if (privacy) {
             loadPrivacy();
         }
+        } catch(error){}
     </script>
     <script>
         navigator.serviceWorker.register(location.protocol+"//"+location.hostname+"/sw.js");
